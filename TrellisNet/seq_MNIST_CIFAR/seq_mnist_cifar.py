@@ -19,7 +19,7 @@ parser.add_argument('--clip', type=float, default=0.5,
                     help='gradient clipping')
 parser.add_argument('--epochs', type=int, default=200,
                     help='upper epoch limit (default: 200)')
-parser.add_argument('--batch_size', type=int, default=64, metavar='N',
+parser.add_argument('--batch_size', type=int, default=1, metavar='N',
                     help='batch size')
 
 parser.add_argument('--nlevels', type=int, default=11,
@@ -159,6 +159,25 @@ optimizer = getattr(optim, args.optim)(model.parameters(), lr=lr)
 # Training code
 ###############################################################################
 
+def numParameters(model):
+    """
+    아래와 같은 방식으로 모델의 레이어별 parameter수와 모델 용량을 확인할 수 있음.
+    
+    model = Net(n_layers = 50, input_size = 108, useAux = False)
+    numParameters(model)
+    
+    """
+    sum = 0
+    
+    for name, parameter in model.named_parameters():
+        # if parameter.requires_grad:
+            # print(name, '/', parameter.shape)
+    
+        sum += np.prod(parameter.shape)
+            
+    print(f'이 모델의 용량은 {sum*4/1024:.2f}kB 입니다.')
+
+numParameters(model)
 
 def train(epoch):
     global steps
